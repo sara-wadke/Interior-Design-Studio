@@ -1,0 +1,452 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Interior Design Portfolio</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #fff4e6 0%, #ffe3b3 100%);
+      color: #4a3c1b;
+      scroll-behavior: smooth;
+      line-height: 1.6;
+    }
+    .btn {
+      @apply px-7 py-3 rounded-full font-semibold text-lg transition-all duration-300 ease-in-out shadow-lg;
+      box-shadow: 0 8px 15px rgba(255, 140, 0, 0.25);
+      user-select: none;
+      background-image: linear-gradient(45deg, #ff9a3c, #ff6f00);
+      color: white;
+    }
+    .btn-primary {
+      background-image: linear-gradient(45deg, #ff7e1a, #ffaf3c);
+      box-shadow: 0 8px 20px rgba(255, 111, 0, 0.5);
+    }
+    .btn-primary:hover {
+      background-image: linear-gradient(45deg, #ffaf3c, #ff7e1a);
+    }
+    .btn-primary:focus {
+      outline: 3px solid #ffd78f;
+      outline-offset: 2px;
+    }
+    .btn-secondary {
+      @apply bg-white text-orange-600 border border-orange-600 hover:bg-orange-50 active:bg-orange-100;
+      box-shadow: 0 4px 6px rgba(255, 140, 0, 0.15);
+      background-image: linear-gradient(90deg, #fff7e6, #fff1cc);
+    }
+    .btn-secondary:hover {
+      background-image: linear-gradient(90deg, #fff1cc, #ffe7a1);
+    }
+    .btn-secondary:focus {
+      outline: 3px solid #ffd78f;
+      outline-offset: 2px;
+    }
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      inset: 0;
+      overflow-y: auto;
+      background-color: rgba(48, 25, 0, 0.4);
+      backdrop-filter: blur(10px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 1.5rem;
+    }
+    .modal-content {
+      @apply bg-white p-8 rounded-2xl shadow-2xl relative max-w-lg w-full;
+      animation: fadeInScale 0.35s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+      box-shadow: 0 25px 50px rgba(255, 140, 0, 0.2);
+      border: 2px solid #ff9a3c;
+      background: #fff8ef;
+    }
+    .close-button {
+      @apply absolute top-4 right-4 font-bold cursor-pointer select-none text-orange-400 text-3xl hover:text-orange-700 transition-colors;
+      line-height: 1;
+      transform: rotate(45deg);
+      user-select: none;
+    }
+    @keyframes fadeInScale {
+      from {
+        opacity: 0;
+        transform: scale(0.85);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+      will-change: opacity, transform;
+    }
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    header  {
+      background: linear-gradient(90deg, #ffdca0 0%, #ffc069 100%);
+      box-shadow: 0 2px 10px rgb(255 140 0 / 0.15);
+      padding-top: 1.5rem;
+      padding-bottom: 1.5rem;
+    }
+    header a.text-3xl {
+      letter-spacing: -0.03em;
+      color: #d46a00;
+      text-shadow: 1px 1px 2px rgba(255, 140, 0, 0.2);
+      transition: color 0.3s ease;
+      font-weight: 800;
+    }
+    header a.text-3xl:hover {
+      color: #b25300;
+    }
+    section.bg-gradient-to-br {
+      background-image: linear-gradient(135deg, #ff7e1a 0%, #ffcd38 100%);
+      text-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      box-shadow: inset 0 0 50px rgba(255, 140, 0, 0.1);
+    }
+    section.bg-gradient-to-br h1 {
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      text-shadow: 0 3px 10px rgba(255, 111, 0, 0.9);
+      font-weight: 900;
+    }
+    section.bg-gradient-to-br p {
+      text-shadow: 0 1px 4px rgba(0,0,0,0.25);
+      font-weight: 600;
+    }
+    #about p {
+      font-size: 1.5rem;
+      color: #7a5e00;
+      letter-spacing: 0.02em;
+    }
+    #about h2 {
+      letter-spacing: -0.04em;
+      text-shadow: 1px 1px 2px #ffbd69;
+      color: #d46a00;
+    }
+    #about img {
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+      will-change: transform, box-shadow;
+      cursor: pointer;
+      border-radius: 1rem;
+      box-shadow: 0 12px 28px rgba(255, 140, 0, 0.3);
+      width: 500px;
+      height: 300px;
+    }
+    #about img:hover {
+      transform: scale(1.05) rotate(1deg);
+      box-shadow: 0 20px 50px rgba(255, 140, 0, 0.5);
+    }
+    .btn {
+           font-size: 1.5rem;
+      color: #7a5e00;
+      letter-spacing: 0.02em;
+    }
+    section.bg-pink-50 {
+      background: linear-gradient(135deg, #e0ca9b 0%, #ff923f 100%);
+    }
+    section.bg-pink-50 h2 {
+      text-shadow: 1px 1px 1px #ffd78f;
+      color: #d46a00;
+    }
+    .grid > div {
+      background: white;
+      border-radius: 1rem;
+      box-shadow: 0 8px 20px rgba(255, 140, 0, 0.15);
+      padding: 2rem 1.5rem;
+      transition: box-shadow 0.3s ease, transform 0.3s ease;
+    }
+    .grid > div:hover {
+      box-shadow: 0 15px 40px rgba(255, 140, 0, 0.3);
+      transform: translateY(-6px) scale(1.03);
+    }
+    .grid > div div.text-4xl {
+      filter: drop-shadow(0 1px 2px rgba(255, 140, 0, 0.4));
+    }
+    .grid > div h3 {
+      color: #d46a00;
+      font-weight: 700;
+    }
+    .grid > div p {
+      color: #7a5e00;
+    }
+    #projects {
+      background-image: linear-gradient(135deg, #fcd8b4 0%, #ffa0c9 100%);
+    }
+    #projects h2 {
+      text-shadow: 0 2px 12px rgba(255, 140, 0, 0.7);
+      letter-spacing: -0.02em;
+      color: #b25300;
+    }
+    #projects .grid > div {
+      border-radius: 1.5rem;
+      box-shadow: 0 10px 30px rgba(255, 140, 0, 0.15);
+      transition: transform 0.35s ease, box-shadow 0.35s ease;
+      overflow: hidden;
+      background-color: white;
+    }
+    #projects .grid > div:hover {
+      transform: scale(1.07) translateY(-8px);
+      box-shadow: 0 20px 60px rgba(255, 140, 0, 0.35);
+      z-index: 10;
+    }
+    #projects img {
+      border-top-left-radius: 1.25rem;
+      border-top-right-radius: 1.25rem;
+      object-fit: cover;
+      height: 20rem;
+      width: auto;
+      transition: transform 0.5s ease;
+      will-change: transform;
+      cursor: pointer;
+    }
+    #projects img:hover {
+      transform: scale(1.05);
+    }
+    #projects h3 {
+      color: #e27303;
+      font-weight: bolder;
+    }
+    #projects p {
+      color: #7a5e00;
+      line-height: 1.4;
+      font-size: 1.3rem;
+    }
+    footer {
+      background: linear-gradient(45deg, #5c3c00, #3f2700);
+      color: #ffecc9;
+      box-shadow: inset 0 10px 15px -10px rgba(255, 140, 0, 0.7);
+      font-weight: 500;
+    }
+    footer p {
+      font-weight: 500;
+      font-size: 1rem;
+    }
+    footer a {
+      transition: color 0.3s ease;
+      font-weight: 600;
+      color: #ffc87c;
+    }
+    footer a:hover {
+      color: #fff2d1;
+      text-decoration: underline;
+    }
+    input[type="text"],
+    input[type="email"],
+    textarea {
+      font-family: inherit;
+      font-size: 1rem;
+      border: 2px solid #ffd78f;
+      background-color: #fff8ef;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      color: #4a3c1b;
+    }
+    input[type="text"]:focus,
+    input[type="email"]:focus,
+    textarea:focus {
+      border-color: #ff7e1a;
+      box-shadow: 0 0 8px rgba(255, 140, 0, 0.6);
+      outline: none;
+    }
+    textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+    @media (max-width: 768px) {
+      header nav div.space-x-6 {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-end;
+      }
+      header nav div.space-x-6 a,
+      header nav div.space-x-6 button {
+        width: 100%;
+        text-align: center;
+      }
+      #about {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+<header class="bg-gradient-to-r from-orange-100 to-yellow-200 shadow-sm py-5">
+  <nav class="container mx-auto px-6 flex justify-between items-center">
+    <a href="index.html" class="text-3xl font-extrabold text-orange-700">DesignStudio</a>
+    <div class="space-x-6">
+      <a href="todo.html" class="text-orange-800 hover:text-orange-600 font-medium">To do list</a>
+      <a href="products.html" class="text-orange-800 hover:text-orange-600 font-medium">Products</a>
+      <button id="requestConsultationBtn" class="btn btn-primary">Request Consultation</button>
+    </div>
+  </nav>
+</header>
+
+<section class="bg-gradient-to-br from-orange-600 to-yellow-400 text-white py-20 text-center">
+  <div class="max-w-3xl mx-auto px-6 fade-in">
+    <h1 class="text-5xl font-extrabold mb-4">Transforming Spaces, Inspiring Lives</h1>
+    <p class="text-xl mb-6">Innovative Interior Design & Architecture Solutions</p>
+    <a href="#about" class="btn btn-secondary">Discover More</a>
+  </div>
+</section>
+
+<section id="about" class="container mx-auto px-6 py-20 flex gap-12 items-center max-w-6xl">
+  <div class="flex-1 fade-in">
+    <h2 class="text-4xl font-bold mb-6">About Us</h2>
+    <p>At DesignStudio, we create harmonious spaces that blend functionality with style. Our experienced team specializes in bespoke interior design and architectural projects that transform your vision into reality.</p>
+  </div>
+  <div class="flex-1 fade-in">
+    <img src="images/office.jpg" alt="Modern living room" class="rounded-xl shadow-lg" />
+  </div>
+</section>
+
+<section class="bg-pink-50 py-20">
+  <div class="container mx-auto px-6 max-w-5xl">
+    <h2 class="text-3xl font-bold mb-12 text-center">Our Expertise</h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div class="fade-in p-6">
+        <div class="text-4xl mb-4">🎨</div>
+        <h3 class="text-2xl font-semibold mb-2">Interior Design</h3>
+        <p>We craft elegant, functional interiors tailored to your lifestyle and preferences.</p>
+      </div>
+      <div class="fade-in p-6">
+        <div class="text-4xl mb-4">🏗️</div>
+        <h3 class="text-2xl font-semibold mb-2">Architecture</h3>
+        <p>Innovative architectural solutions that combine aesthetics with structural excellence.</p>
+      </div>
+      <div class="fade-in p-6">
+        <div class="text-4xl mb-4">📐</div>
+        <h3 class="text-2xl font-semibold mb-2">Project Management</h3>
+        <p>Comprehensive project oversight to ensure timely delivery and quality assurance.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="projects" class="py-20 px-6 max-w-7xl mx-auto">
+  <h2 class="text-4xl md:text-5xl font-extrabold mb-16 text-center text-gray-800">Our Projects</h2>
+  
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+    
+    <!-- Project Card 1 -->
+    <div class="bg-white shadow-xl rounded-2xl overflow-hidden transform transition duration-300 hover:scale-105">
+      <img src="images/modernlivingroom.jpg" alt="Contemporary Apartment"
+           class="w-full h-60 object-cover" />
+      <div class="p-6">
+        <h3 class="text-2xl font-bold text-gray-800 mb-3">Contemporary Apartment</h3>
+        <p class="text-gray-600">A sleek, modern apartment designed with open spaces and warm materials for cozy living.</p>
+      </div>
+    </div>
+    <!-- Project Card 2 -->
+    <div class="bg-white shadow-xl rounded-2xl overflow-hidden transform transition duration-300 hover:scale-105">
+      <img src="images/kitchen.jpg" alt="Residential Kitchen"
+           class="w-full h-60 object-cover" />
+      <div class="p-6">
+        <h3 class="text-2xl font-bold text-gray-800 mb-3">Residential Kitchen Model</h3>
+        <p class="text-gray-600">Blending natural textures and classic charm to create a welcoming countryside retreat.</p>
+      </div>
+    </div>
+    <!-- Project Card 3 (Placeholder - duplicate updated) -->
+    <div class="bg-white shadow-xl rounded-2xl overflow-hidden transform transition duration-300 hover:scale-105">
+      <img src="images/Commercial Office Space.jpg" alt="Commercial Office Space"
+           class="w-full h-60 object-cover" />
+      <div class="p-6">
+        <h3 class="text-2xl font-bold text-gray-800 mb-3">Contemporary Apartment</h3>
+        <p class="text-gray-600">A sleek, modern apartment designed with open spaces and warm materials for cozy living.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="py-8 mt-auto">
+  <div class="container mx-auto px-6 text-center">
+    <p>&copy; 2025 DesignStudio. All rights reserved.</p>
+    <p>
+      Designed by <a href="https://github.com/yourprofile" target="_blank" rel="noopener noreferrer">Your Name</a>
+    </p>
+  </div>
+</footer>
+<div id="consultationModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-describedby="modalDesc">
+  <div class="modal-content">
+    <button id="closeModal" aria-label="Close modal" class="close-button">&times;</button>
+    <h2 id="modalTitle" class="text-3xl font-bold mb-4 text-orange-700">Request a Consultation</h2>
+    <p id="modalDesc" class="mb-6 text-orange-900">Please fill in your details below, and we will get back to you shortly.</p>
+    <form id="consultationForm" autocomplete="off">
+      <div class="mb-6">
+        <label for="consultName" class="block font-semibold mb-2 text-orange-700">Name</label>
+        <input type="text" id="consultName" name="consultName" required class="w-full rounded-md px-4 py-3" placeholder="Your full name" />
+      </div>
+      <div class="mb-6">
+        <label for="consultEmail" class="block font-semibold mb-2 text-orange-700">Email</label>
+        <input type="email" id="consultEmail" name="consultEmail" required class="w-full rounded-md px-4 py-3" placeholder="you@example.com" />
+      </div>
+      <div class="mb-6">
+        <label for="consultMessage" class="block font-semibold mb-2 text-orange-700">Message</label>
+        <textarea id="consultMessage" name="consultMessage" required class="w-full rounded-md px-4 py-3" placeholder="How can we help you?"></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary w-full">Submit</button>
+    </form>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const fadeElems = document.querySelectorAll('.fade-in');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if(entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.3 });
+    fadeElems.forEach(el => observer.observe(el));
+  });
+
+  const modal = document.getElementById('consultationModal');
+  const openBtn = document.getElementById('requestConsultationBtn');
+  const closeBtn = document.getElementById('closeModal');
+
+  openBtn.addEventListener('click', () => {
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+    // Focus first input
+    document.getElementById('consultName').focus();
+  });
+
+  closeBtn.addEventListener('click', () => {
+    modal.style.display = 'none';
+    document.body.style.overflow = '';
+  });
+
+  window.addEventListener('click', (e) => {
+    if(e.target === modal) {
+      modal.style.display = 'none';
+      document.body.style.overflow = '';
+    }
+  });
+  document.getElementById('consultationForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    alert('Thank you for your request! We will contact you soon.');
+    modal.style.display = 'none';
+    document.body.style.overflow = '';
+    e.target.reset();
+  });
+
+  document.getElementById('contactForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    alert('Thank you for contacting us! We will respond shortly.');
+    e.target.reset();
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Room Customizer - Design Your Space</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', 'Inter', sans-serif;
+    background: linear-gradient(to right, #fff0e6, #ffe4e1); /* Soft warm gradient */
+    color: #5a3e36;
+  }
+  header {
+      background: linear-gradient(90deg, #ffdca0 0%, #ffc069 100%);
+    color: #955710;
+    padding: 1rem 2rem;
+    font-weight: 700;
+    font-size: 1.75rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 12px rgba(251, 146, 60, 0.6);
+    top: 0;
+    z-index: 101;
+  }
+  header .a {
+    letter-spacing: 2px;
+        color: #f37d07;
+  } 
+  #welcomeMessage {
+    font-size: 2rem;
+    font-weight: bold;
+    text-align: center;
+    padding: 20px;
+    color: #c24b00;
+    background: #ffe5d0;
+    margin: 0 auto 20px;
+    width: 80%;
+    border-radius: 12px;
+    box-shadow: 0 0 8px rgba(255, 163, 102, 0.3);
+  }
+  .main-container {
+    display: flex;
+    gap: 24px;
+    padding: 20px 40px;
+  }
+  .controls-horizontal {
+    width: 30%;
+    background: #fffaf4;
+    padding: 24px;
+    border-radius: 20px;
+    box-shadow: 0 0 15px rgba(255, 190, 150, 0.4);
+    overflow-y: auto;
+    max-height: 90vh;
+  }
+  .room-preview-section {
+    width: 70%;
+    background: #fffdf9;
+    padding: 24px;
+    border-radius: 20px;
+    box-shadow: 0 0 15px rgba(255, 180, 120, 0.4);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .room-preview-section h2 {
+    font-size: 2rem;
+    color: #ff6600;
+    margin-bottom: 16px;
+  }
+  #roomPreview {
+    position: relative;
+    width: 100%;
+    height: 520px;
+    background-color: #fdf1e6;
+    border: 3px dashed #ffa07a;
+    border-radius: 16px;
+    overflow: hidden;
+  }
+  .section-box {
+    background: #fff0e1;
+    border: 2px solid #ffcc99;
+    border-radius: 14px;
+    padding: 16px;
+    margin-bottom: 24px;
+    box-shadow: 0 3px 8px rgba(255, 165, 110, 0.3);
+    transition: transform 0.2s;
+  }
+  .section-box:hover {
+    transform: scale(1.02);
+  }
+  .section-title {
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: #d2691e;
+  }
+  .predefined-colors,
+  .furniture-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .color-swatch {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 3px solid #e0c2b0;
+    cursor: pointer;
+  }
+  .color-swatch.active {
+    outline: 3px solid #ff8243;
+  }
+  .layout-option,
+  .furniture-item {
+    padding: 6px;
+    border: 2px solid #ffc0a0;
+    border-radius: 10px;
+    background-color: #fff9f5;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .layout-option:hover,
+  .furniture-item:hover {
+    transform: scale(1.05);
+    box-shadow: 0 2px 8px rgba(255, 168, 120, 0.2);
+  }
+  .layout-option.selected,
+  .furniture.selected {
+    outline: 3px solid #ff7f50;
+    border-radius: 12px;
+  }
+  .movement-controls {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .movement-controls button {
+    padding: 10px 12px;
+    background-color: #ff8c66;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  #saveBtn {
+    background: #ff6600;
+    color: white;
+    font-size: 1.1rem;
+    border-radius: 10px;
+    border: none;
+    padding: 12px 24px;
+    margin-bottom: 10px;
+    align-self: flex-end;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(255, 102, 0, 0.3);
+  }
+  #notes {
+    border: 2px solid #ffb68e;
+    border-radius: 12px;
+    font-size: 1.2rem;
+    padding: 10px;
+    background-color: #fffefb;
+  }
+ .furniture {
+  position: absolute;
+  border: 2px solid rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: grab;
+  font-size: 0.9em;
+  border-radius: 25px;
+  box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.2);
+  padding: 0;
+  z-index: 5;
+}
+.furniture[data-furniture="sofa"] { width: 100px; height: 50px; }
+.furniture[data-furniture="bed"] { width: 100px; height: 100px; }
+.furniture[data-furniture="table"] { width: 100px; height: 30px;border-radius: 20%; }
+.furniture[data-furniture="plant"] { width: 60px; height: 90px; border-radius: 50%; }
+.furniture[data-furniture="basin"] { width: 70px; height: 70px; }
+.furniture[data-furniture="wardrobe"] { width: 100px; height: 90px; }
+  .layout-image {
+    z-index: 1;
+  }
+  @media (max-width: 900px) {
+    .main-container {
+      flex-direction: column;
+    }
+    .controls-horizontal,
+    .room-preview-section {
+      width: 100%;
+    }
+  }
+</style>
+</head>
+<body>
+  <header class="header">
+    <a href="index.html">DesignStudio</a>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="products.html">Products</a>
+    </nav>
+  </header>
+  <div id="welcomeMessage">Welcome to the Ultimate Room Designer</div>
+<div style="display: flex; gap: 10px; justify-content: flex-end; margin-bottom: 10px;">
+  <button id="saveBtn" style="padding: 10px 20px; background: #f97316; color: white; border: none; border-radius: 6px; cursor: pointer;">
+    💾 Save Image
+  </button>
+  <button id="resetBtn" style="padding: 10px 20px; background: #e53e3e; color: white; border: none; border-radius: 6px; cursor: pointer;">
+    🧽 Reset Design
+  </button>
+</div>
+  <div class="main-container">
+    <div class="room-preview-section">
+      <h2>Your Customized Room Preview</h2>
+      <div id="roomPreview" class="room-preview"></div>
+    </div>
+
+    <div class="controls-horizontal">
+      <div class="section-box">
+        <h2 class="section-title">1. Wall Color Selection</h2>
+        <input type="color" id="colorPicker" value="#ecf0f1" style="width: 100%; height: 50px; border-radius: 12px; border: 1px solid #ccc;">
+        <div class="predefined-colors mt-4">
+          <div class="color-swatch" style="background: #ecf0f1; width: 40px; height: 40px; border-radius: 50%; border: 2px solid #ddd; cursor: pointer;" data-color="#ecf0f1"></div>
+          <div class="color-swatch" style="background: #ffe4e1; width: 40px; height: 40px; border-radius: 50%; border: 2px solid #ddd; cursor: pointer;" data-color="#ffe4e1"></div>
+          <div class="color-swatch" style="background: #ffe8cc; width: 40px; height: 40px; border-radius: 50%; border: 2px solid #ddd; cursor: pointer;" data-color="#ffe8cc"></div>
+          <div class="color-swatch" style="background: #d1c4e9; width: 40px; height: 40px; border-radius: 50%; border: 2px solid #ddd; cursor: pointer;" data-color="#d1c4e9"></div>
+          <div class="color-swatch" style="background: #f3e5f5; width: 40px; height: 40px; border-radius: 50%; border: 2px solid #ddd; cursor: pointer;" data-color="#f3e5f5"></div>
+          <div class="color-swatch" style="background: #fffde7; width: 40px; height: 40px; border-radius: 50%; border: 2px solid #ddd; cursor: pointer;" data-color="#fffde7"></div>
+        </div>
+      </div>
+
+      <div class="section-box">
+        <h2 class="section-title">2. Room Layout Selection</h2>
+        <div class="furniture-options">
+          <div class="layout-option" data-layout="studio">Studio<br><img src="images/1rk.jpg" width="100"></div>
+          <div class="layout-option" data-layout="1bhk">1BHK<br><img src="images/1bhk.jpg" width="100"></div>
+          <div class="layout-option" data-layout="2bhk">2BHK<br><img src="images/2bhk.jpg" width="100"></div>
+          <div class="layout-option" data-layout="3bhk">3BHK<br><img src="images/3bhk.jpg" width="100"></div>
+        </div>
+      </div>
+
+      <div class="section-box">
+        <h2 class="section-title">3. Add Furniture</h2>
+        <div class="furniture-options">
+          <div class="furniture-item" data-furniture="sofa"><img src="images/sofa.png" width="100"></div>
+          <div class="furniture-item" data-furniture="bed"><img src="images/bed.png" width="100"></div>
+          <div class="furniture-item" data-furniture="table"><img src="images/table.png" width="100"></div>
+          <div class="furniture-item" data-furniture="plant"><img src="images/plant.png" width="100"></div>
+          <div class="furniture-item" data-furniture="basin"><img src="images/basin.png" width="100"></div>
+          <div class="furniture-item" data-furniture="wardrobe"><img src="images/wardrobe.png" width="100"></div>
+        </div>
+      </div>
+
+      <div class="section-box">
+        <h2 class="section-title">5. Precise Furniture Movement</h2>
+        <div class="movement-controls">
+          <button id="moveUp">Up</button>
+          <button id="moveLeft">Left</button>
+          <div></div>
+          <button id="moveRight">Right</button>
+          <button id="moveDown">Down</button>
+        </div>
+      </div>
+
+      <div class="section-box">
+        <h2 class="section-title">7. Notes</h2>
+        <textarea id="notes" placeholder="Jot down your design ideas..." style="width: 100%; height: 120px; border: 1px solid #ccc; border-radius: 10px; padding: 10px;"></textarea>
+      </div>
+
+    </div>
+  </div>
+</body>
+    <script>
+  document.getElementById('saveBtn').addEventListener('click', () => {
+    alert('Image saved successfully!');
+  });
+document.getElementById('resetBtn').addEventListener('click', () => {
+  const roomPreview = document.getElementById('roomPreview');
+  const colorPicker = document.getElementById('colorPicker');
+  const colorSwatches = document.querySelectorAll('.color-swatch');
+  const notesField = document.getElementById('notes');
+
+
+  roomPreview.querySelectorAll('.furniture').forEach(el => el.remove());
+
+  roomPreview.style.backgroundColor = '#ecf0f1';
+  colorPicker.value = '#ecf0f1';
+  colorSwatches.forEach(swatch => {
+    if (swatch.dataset.color === '#ecf0f1') {
+      swatch.classList.add('active');
+    } else {
+      swatch.classList.remove('active');
+    }
+  });
+
+  const defaultLayoutOption = document.querySelector('.layout-option[data-layout="studio"]');
+  if (defaultLayoutOption) defaultLayoutOption.click();
+
+  notesField.value = '';
+
+  if (selectedFurniture) {
+    selectedFurniture.classList.remove('selected');
+    selectedFurniture = null;
+  }
+});
+        document.addEventListener('DOMContentLoaded', () => {
+            const roomPreview = document.getElementById('roomPreview');
+            const colorPicker = document.getElementById('colorPicker');
+            const colorSwatches = document.querySelectorAll('.color-swatch');
+            const layoutOptions = document.querySelectorAll('.layout-option');
+            const furnitureOptions = document.querySelectorAll('.furniture-item');
+            const moveUpBtn = document.getElementById('moveUp');
+            const moveDownBtn = document.getElementById('moveDown');
+            const moveLeftBtn = document.getElementById('moveLeft');
+            const moveRightBtn = document.getElementById('moveRight');
+            const welcomeMessageElement = document.getElementById('welcomeMessage');
+            let selectedFurniture = null;
+            let isDragging = false;
+            let currentX;
+            let currentY;
+            let initialX;
+            let initialY;
+            let xOffset = 0;
+            let yOffset = 0;
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const userName = urlParams.get('username');
+            if (userName) {
+                welcomeMessageElement.textContent = `Welcome, ${userName}! Design your perfect room.`;
+            } else {
+                welcomeMessageElement.textContent = `Welcome! Design your perfect room.`;
+            }
+
+            colorPicker.addEventListener('input', (event) => {
+               
+                roomPreview.style.backgroundColor = event.target.value; 
+                colorSwatches.forEach(swatch => swatch.classList.remove('active'));
+            });
+
+            colorSwatches.forEach(swatch => {
+                swatch.addEventListener('click', () => {
+                    const color = swatch.dataset.color;
+                    roomPreview.style.backgroundColor = color; 
+                    colorPicker.value = color;
+
+                    colorSwatches.forEach(s => s.classList.remove('active'));
+                    swatch.classList.add('active');
+                });
+            });
+
+            const initialColor = colorPicker.value;
+            colorSwatches.forEach(swatch => {
+                if (swatch.dataset.color === initialColor) {
+                    swatch.classList.add('active');
+                }
+            });
+
+            layoutOptions.forEach(option => {
+                option.addEventListener('click', () => {
+                  
+                    layoutOptions.forEach(opt => opt.classList.remove('selected'));
+                   
+                    option.classList.add('selected');
+                    const existingFurniture = Array.from(roomPreview.querySelectorAll('.furniture'));
+                    roomPreview.innerHTML = ''; // Clear everything
+                    selectedFurniture = null; // Also reset selected furniture when layout changes
+
+                    const layoutImageElement = option.querySelector('img');
+                    const layoutImageSrc = layoutImageElement.src;
+                    const layoutImageAlt = layoutImageElement.alt;
+
+                    const previewImage = document.createElement('img');
+                    previewImage.src = layoutImageSrc;
+                    previewImage.alt = layoutImageAlt;
+                    previewImage.classList.add('layout-image'); // Custom class for styling
+                    // Added Tailwind classes for full coverage and positioning
+                    previewImage.classList.add('absolute', 'top-0', 'left-0', 'w-full', 'h-full', 'object-cover');
+                    previewImage.style.zIndex = 1; // Ensure it's behind furniture (which is z-index 5/10)
+
+                    roomPreview.appendChild(previewImage);
+
+                    existingFurniture.forEach(furn => {
+                           const newFurnClone = document.createElement('div');
+                        newFurnClone.classList.add('furniture');
+                        newFurnClone.setAttribute('data-furniture', furn.dataset.furniture);
+                        // Get the image from the original furniture item if it was image-based
+                        const img = furn.querySelector('img');
+                        if (img) {
+                            const newImg = document.createElement('img');
+                            newImg.src = img.src;
+                            newImg.alt = img.alt;
+                            newFurnClone.appendChild(newImg);
+                        }
+                        newFurnClone.style.left = furn.style.left;
+                        newFurnClone.style.top = furn.style.top;
+                        roomPreview.appendChild(newFurnClone);
+                    });
+                });
+            });
+
+            const defaultLayoutOption = document.querySelector('.layout-option[data-layout="studio"]');
+            if (defaultLayoutOption) {
+                defaultLayoutOption.click(); // Programmatically click it to set initial state including the image
+            }
+
+            furnitureOptions.forEach(item => {
+                item.addEventListener('click', () => {
+                    const furnitureType = item.dataset.furniture;
+                    const newFurniture = document.createElement('div');
+                    newFurniture.classList.add('furniture');
+                    newFurniture.setAttribute('data-furniture', furnitureType);
+                    
+                    const furnitureItemImage = item.querySelector('img');
+                    if (furnitureItemImage) {
+                        const imgElement = document.createElement('img');
+                        imgElement.src = furnitureItemImage.src;
+                        imgElement.alt = furnitureItemImage.alt;
+                        newFurniture.appendChild(imgElement); // Append the image to the furniture div
+                    }
+
+                    const previewRect = roomPreview.getBoundingClientRect();
+                    
+                    newFurniture.style.visibility = 'hidden'; 
+                    roomPreview.appendChild(newFurniture); 
+                    const defaultWidth = newFurniture.offsetWidth;
+                    const defaultHeight = newFurniture.offsetHeight;
+                    newFurniture.style.visibility = ''; 
+
+                    let initialLeft = (previewRect.width / 2) - (defaultWidth / 2);
+                    let initialTop = (previewRect.height / 2) - (defaultHeight / 2);
+
+                    initialLeft = Math.max(0, Math.min(initialLeft, previewRect.width - defaultWidth));
+                    initialTop = Math.max(0, Math.min(initialTop, previewRect.height - defaultHeight));
+
+                    newFurniture.style.left = `${initialLeft}px`;
+                    newFurniture.style.top = `${initialTop}px`;
+
+                    roomPreview.appendChild(newFurniture); 
+                    selectFurniture(newFurniture); // Select newly added furniture
+                });
+            });
+
+            roomPreview.addEventListener('mousedown', dragStart);
+            roomPreview.addEventListener('mouseup', dragEnd);
+            roomPreview.addEventListener('mousemove', drag);
+            // Add touch event listeners for mobile
+            roomPreview.addEventListener('touchstart', dragStart);
+            roomPreview.addEventListener('touchend', dragEnd);
+            roomPreview.addEventListener('touchmove', drag);
+
+            function getClientCoords(e) {
+                return e.touches ? { clientX: e.touches[0].clientX, clientY: e.touches[0].clientY } : { clientX: e.clientX, clientY: e.clientY };
+            }
+
+            function dragStart(e) {
+                const { clientX, clientY } = getClientCoords(e);
+
+                if (e.target.classList.contains('furniture') || e.target.closest('.furniture')) { // Check if target is furniture or inside furniture
+                    selectedFurniture = e.target.closest('.furniture'); // Get the actual furniture container
+                    isDragging = true;
+                    selectFurniture(selectedFurniture); // Ensure it's selected on drag start
+
+                    const furnitureRect = selectedFurniture.getBoundingClientRect();
+                    const previewRect = roomPreview.getBoundingClientRect();
+
+                    initialX = clientX - previewRect.left; // Mouse X relative to preview
+                    initialY = clientY - previewRect.top;  // Mouse Y relative to preview
+
+                    xOffset = initialX - (furnitureRect.left - previewRect.left);
+                    yOffset = initialY - (furnitureRect.top - previewRect.top);
+
+                    selectedFurniture.style.cursor = 'grabbing';
+                    if (e.type === 'touchstart') {
+                        e.preventDefault(); // Prevent scrolling on touch devices during drag
+                    }
+                } else {
+                  
+                    if (selectedFurniture) {
+                        selectedFurniture.classList.remove('selected');
+                        selectedFurniture = null;
+                    }
+                }
+            }
+
+            function dragEnd(e) {
+                isDragging = false;
+                if (selectedFurniture) {
+                    selectedFurniture.style.cursor = 'grab';
+                }
+            }
+
+            function drag(e) {
+                if (!isDragging || !selectedFurniture) return;
+
+                const { clientX, clientY } = getClientCoords(e);
+                e.preventDefault(); // Prevent default browser drag behavior (especially important for touch)
+
+                const previewRect = roomPreview.getBoundingClientRect();
+
+                currentX = clientX - previewRect.left - xOffset;
+                currentY = clientY - previewRect.top - yOffset;
+
+                // Ensure furniture stays strictly within the "Your Customized Room Preview" box
+                const furnitureWidth = selectedFurniture.offsetWidth;
+                const furnitureHeight = selectedFurniture.offsetHeight;
+
+                let newLeft = currentX;
+                let newTop = currentY;
+
+                // Boundary checks
+                if (newLeft < 0) newLeft = 0;
+                if (newTop < 0) newTop = 0;
+                if (newLeft + furnitureWidth > previewRect.width) newLeft = previewRect.width - furnitureWidth;
+                if (newTop + furnitureHeight > previewRect.height) newTop = previewRect.height - furnitureHeight;
+
+                selectedFurniture.style.left = `${newLeft}px`;
+                selectedFurniture.style.top = `${newTop}px`;
+            }
+            const moveAmount = 10; // Pixels to move per click
+
+            function moveFurniture(direction) {
+                if (!selectedFurniture) return;
+
+                const currentLeft = parseFloat(selectedFurniture.style.left) || 0;
+                const currentTop = parseFloat(selectedFurniture.style.top) || 0;
+                const furnitureWidth = selectedFurniture.offsetWidth;
+                const furnitureHeight = selectedFurniture.offsetHeight;
+                const previewRect = roomPreview.getBoundingClientRect();
+
+                let newLeft = currentLeft;
+                let newTop = currentTop;
+
+                switch (direction) {
+                    case 'up':
+                        newTop = currentTop - moveAmount;
+                        break;
+                    case 'down':
+                        newTop = currentTop + moveAmount;
+                        break;
+                    case 'left':
+                        newLeft = currentLeft - moveAmount;
+                        break;
+                        case 'right':
+                        newLeft = currentLeft + moveAmount;
+                        break;
+                }
+
+                if (newLeft < 0) newLeft = 0;
+                if (newTop < 0) newTop = 0;
+                if (newLeft + furnitureWidth > previewRect.width) newLeft = previewRect.width - furnitureWidth;
+                if (newTop + furnitureHeight > previewRect.height) newTop = previewRect.height - furnitureHeight;
+
+                selectedFurniture.style.left = `${newLeft}px`;
+                selectedFurniture.style.top = `${newTop}px`;
+            }
+
+            moveUpBtn.addEventListener('click', () => moveFurniture('up'));
+            moveDownBtn.addEventListener('click', () => moveFurniture('down'));
+            moveLeftBtn.addEventListener('click', () => moveFurniture('left'));
+            moveRightBtn.addEventListener('click', () => moveFurniture('right'));
+
+            function selectFurniture(furnitureElement) {
+                // Deselect any previously selected furniture
+                if (selectedFurniture && selectedFurniture !== furnitureElement) {
+                    selectedFurniture.classList.remove('selected');
+                }
+                // Select the new furniture
+                selectedFurniture = furnitureElement;
+                selectedFurniture.classList.add('selected');
+            }
+            roomPreview.addEventListener('click', (e) => {
+                if (e.target.classList.contains('furniture') || e.target.closest('.furniture')) { // Check if target is furniture or inside furniture
+                    selectFurniture(e.target.closest('.furniture')); // Select the actual furniture container
+                } else if (e.target === roomPreview || e.target.classList.contains('layout-image')) { 
+                    // Clicked on the room preview background or the layout image, deselect furniture
+                    if (selectedFurniture) {
+                        selectedFurniture.classList.remove('selected');
+                        selectedFurniture = null;
+                    }
+                }
+            });
+   
+            roomPreview.addEventListener('touchstart', (e) => {
+                if (e.target.classList.contains('furniture') || e.target.closest('.furniture')) {
+                    selectFurniture(e.target.closest('.furniture'));
+                } else if (e.target === roomPreview || e.target.classList.contains('layout-image')) {
+                    if (selectedFurniture) {
+                        selectedFurniture.classList.remove('selected');
+                        selectedFurniture = null;
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>  
